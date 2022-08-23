@@ -1,0 +1,35 @@
+plugins {
+    id "io.freefair.lombok" version "6.5.0.3"
+}
+
+allprojects {
+    apply plugin: "java"
+    apply plugin: "io.spring.dependency-management"
+    ext {
+        MockitoVersion = "4.7.0"
+        JunitVersion = "5.8.1"
+        GuavaVersion = "31.1-jre"
+        HutoolVersion = "5.8.5"
+        JacksonVersion = "2.13.3"
+        Lang3Version = "3.12.0"
+    }
+    repositories {
+        jcenter()
+        mavenCentral()
+
+    }
+    dependencies {
+        testImplementation "org.mockito:mockito-core:${MockitoVersion}"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:${JunitVersion}"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${JunitVersion}"
+
+
+        implementation "com.google.guava:guava:${GuavaVersion}"
+        implementation "org.apache.commons:commons-lang3:${Lang3Version}"
+        implementation "com.fasterxml.jackson.core:jackson-databind:${JacksonVersion}"
+        implementation "com.fasterxml.jackson.core:jackson-core:${JacksonVersion}"
+        implementation "com.fasterxml.jackson.core:jackson-annotations:${JacksonVersion}"
+        implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${JacksonVersion}"
+        implementation "cn.hutool:hutool-core:${HutoolVersion}"
+    }
+}
