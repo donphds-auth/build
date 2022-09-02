@@ -40,7 +40,6 @@ ext {
 
 apply plugin: "java-library"
 apply plugin: "maven-publish"
-apply plugin: "name.remal.sonarlint"
 apply plugin: "com.diffplug.spotless"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
