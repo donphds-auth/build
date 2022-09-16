@@ -68,6 +68,9 @@ subprojects {
         useJUnitPlatform()
     }
 
+    sourceCompatibility = 8
+    targetCompatibility = 8
+
     group = "com.donphds.ma"
     publishing {
         repositories {
@@ -98,8 +101,7 @@ subprojects {
         }
     }
 }
-sourceCompatibility = 8
-targetCompatibility = 8
+
 
 
 
