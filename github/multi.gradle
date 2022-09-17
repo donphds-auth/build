@@ -38,20 +38,20 @@ ext {
     guavaVersion = "31.1-jre"
     lombokVersion = "1.18.24"
 }
-subprojects {
+subprojects { Project project ->
     apply plugin: "java-library"
     apply plugin: "maven-publish"
     apply plugin: "com.diffplug.spotless"
+    apply plugin: "signing"
 
-    sourceCompatibility = 8
-    targetCompatibility = 8
+    sourceCompatibility = 11
+    targetCompatibility = 11
 
     spotless {
         java {
-            googleJavaFormat("1.15.1").groupArtifact("io.opil:google-java-format")
+            googleJavaFormat("1.8").aosp().reflowLongStrings().groupArtifact("com.google.googlejavaformat:google-java-format")
         }
     }
-
 
     dependencies {
         implementation("org.apache.commons:commons-lang3:${lang3Version}")
@@ -71,36 +71,81 @@ subprojects {
     test {
         useJUnitPlatform()
     }
+    group = "com.donphds.${project.name}"
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allJava
+        classifier = "sources"
+    }
 
-    group = "com.donphds.ma"
+    task javadocJar(type: Jar) {
+        from javadoc
+        classifier = "javadoc"
+    }
+
+    ext {
+        isReleasedVersion = !project.parent.version.toString().endsWith("-alpha")
+        gitRespositoryName = project.getParent().name
+    }
     publishing {
-        repositories {
-            maven {
-                name = "GitHubPackages"
-                url = "https://maven.pkg.github.com/Medical-Appointment/donphds-tools"
-                credentials {
-                    username = System.getenv("USERNAME")
-                    password = System.getenv("TOKEN")
+        // 定义发布什么
+        publications {
+            mavenJava(MavenPublication) {
+                groupId = "io.github.donphds"
+                version = project.getParent().version
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+                pom {
+                    name = "${project.name}"
+                    url = "https://github.com/donphds/${gitRespositoryName}.git"
+                    description = "${project.name}"
+                    scm {
+                        connection = "scm:git:git://github.com/donphds/${gitRespositoryName}.git"
+                        developerConnection = "scm:git:ssh://github.com/donphds/${gitRespositoryName}.git"
+                        url = "https://github.com/donphds/${gitRespositoryName}.git"
+                    }
+                    licenses {
+                        license {
+                            name = "The Apache License, Version 2.0"
+                            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = "donphds"
+                            name = "donphds"
+                            email = "donphds@gmail.com"
+                        }
+                    }
                 }
             }
         }
-        publications {
-            gpr(MavenPublication) {
-                groupId = "com.donphds.ma"
-                artifactId = "configuration"
-                version = "0.0.1"
-                versionMapping {
-                    usage("java-api") {
-                        fromResolutionOf("runtimeClasspath")
-                    }
-                    usage("java-runtime") {
-                        fromResolutionResult()
-                    }
+        repositories {
+            maven {
+                credentials {
+                    username findProperty("OSSRH_USER") ?: System.getenv("OSSRH_USER")
+                    password findProperty("OSSRH_PASSWD") ?: System.getenv("OSSRH_PASSWD")
                 }
-                from(components.java)
+                if (!isReleasedVersion) {
+                    url "https://s01.oss.sonatype.org/content/repositories/snapshots"
+                } else {
+                    url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
+                }
             }
         }
     }
+    signing {
+        sign publishing.publications.mavenJava
+    }
+
+
+    javadoc {
+        // <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        // 防止本地打开中文乱码
+        options.addStringOption("charset", "UTF-8")
+    }
+
 }
 
 
