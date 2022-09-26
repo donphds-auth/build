@@ -49,7 +49,9 @@ subprojects { Project project ->
 
     spotless {
         java {
-            googleJavaFormat("1.8").aosp().reflowLongStrings().groupArtifact("com.google.googlejavaformat:google-java-format")
+            googleJavaFormat("1.15.1").groupArtifact("io.opil:google-java-format")
+            indentWithTabs(2)
+            indentWithSpaces(4)
         }
     }
 
