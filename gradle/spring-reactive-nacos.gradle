@@ -77,12 +77,10 @@ dependencies {
     testImplementation "io.projectreactor:reactor-test"
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-        mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${alibabaCloudVersion}"
-    }
+dependencies {
+    implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+    implementation platform("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
+    implementation platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${alibabaCloudVersion}")
 }
 
 
