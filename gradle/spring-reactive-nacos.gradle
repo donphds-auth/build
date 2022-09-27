@@ -70,7 +70,7 @@ dependencies {
 
     // spring
     implementation "org.springframework.boot:spring-boot-starter-webflux"
-    developmentOnly "org.springframework.boot:spring-boot-devtools"
+    compileOnly "org.springframework.boot:spring-boot-devtools"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     // spring cloud
     implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
