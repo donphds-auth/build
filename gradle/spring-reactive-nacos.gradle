@@ -50,7 +50,7 @@ spotless {
     java {
         googleJavaFormat("1.15.1").groupArtifact("io.opil:google-java-format")
         indentWithTabs(2)
-        indentWithSpaces(4)
+        indentWithSpaces(2)
     }
 }
 
