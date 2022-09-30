@@ -1,0 +1,59 @@
+publishing {
+    // 定义发布什么
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = "io.github.donphds"
+            version = project.getParent() == null ? project.version : project.getParent().version
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = "${project.name}"
+                url = "https://github.com/${gitOwnerName}/${gitRespositoryName}.git"
+                description = "${project.name}"
+                scm {
+                    connection = "scm:git:git://github.com/${gitOwnerName}/${gitRespositoryName}.git"
+                    developerConnection = "scm:git:ssh://github.com/${gitOwnerName}/${gitRespositoryName}.git"
+                    url = "https://github.com/${gitOwnerName}/${gitRespositoryName}.git"
+                }
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = "donphds"
+                        name = "donphds"
+                        email = "donphds@gmail.com"
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                username findProperty("OSSRH_USER") ?: System.getenv("OSSRH_USER")
+                password findProperty("OSSRH_PASSWD") ?: System.getenv("OSSRH_PASSWD")
+            }
+            if (!isReleasedVersion) {
+                url "https://s01.oss.sonatype.org/content/repositories/snapshots"
+            } else {
+                url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
+            }
+        }
+    }
+}
+signing {
+    sign publishing.publications.mavenJava
+}
+
+
+javadoc {
+    // <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    // 防止本地打开中文乱码
+    options.addStringOption("charset", "UTF-8")
+}

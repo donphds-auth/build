@@ -21,6 +21,12 @@ allprojects {
         }
         mavenCentral()
     }
+    ext {
+        isReleasedVersion = !project.version.toString().endsWith("-alpha")
+        gitRespositoryName = project.name
+        gitOwnerName = "donphds"
+    }
+    apply from: "./publish.gradle"
 }
 
 ext {
